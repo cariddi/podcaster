@@ -5,7 +5,7 @@ This project was bootstrapped with
 
 In the project directory, you can run:
 
-### `npm start`
+### `npm start` (Development Mode)
 
 Runs the app in the development mode.<br /> Open
 [http://localhost:3000](http://localhost:3000) to view it in the browser.
@@ -27,6 +27,12 @@ React in production mode and optimizes the build for the best performance.
 
 The build is minified and the filenames include the hashes.<br /> Your app is
 ready to be deployed!
+
+To run the project in Production Mode run:
+
+```
+serve -s build
+```
 
 See the section about
 [deployment](https://facebook.github.io/create-react-app/docs/deployment) for
