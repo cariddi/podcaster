@@ -1,6 +1,7 @@
 import { createRoutesFromElements, Route } from 'react-router-dom';
 import { App } from './App';
 import { Paths } from './paths';
+import EpisodeDetails from './routes/EpisodeDetails';
 import { ErrorPage } from './routes/Error';
 import PodcastDetails from './routes/PodcastDetails';
 import PodcastList from './routes/PodcastList';
@@ -16,6 +17,11 @@ export const routes = createRoutesFromElements(
 		<Route
 			path={Paths.PODCAST}
 			element={<PodcastDetails />}
+			errorElement={<ErrorPage />}
+		/>
+		<Route
+			path={Paths.EPISODE}
+			element={<EpisodeDetails />}
 			errorElement={<ErrorPage />}
 		/>
 	</Route>
