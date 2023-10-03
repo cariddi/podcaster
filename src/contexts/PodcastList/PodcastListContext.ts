@@ -6,6 +6,10 @@ export interface PodcastListContextType {
 	filteredPodcasts: DomainPodcastSnapshot[];
 	updateFilteredPodcasts: (term: string) => void;
 	loading: boolean;
+	currentPodcast: DomainPodcastSnapshot | undefined;
+	setCurrentPodcast: React.Dispatch<
+		React.SetStateAction<DomainPodcastSnapshot | undefined>
+	>;
 }
 
 export const PodcastListContext = createContext<PodcastListContextType>(

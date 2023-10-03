@@ -1,9 +1,13 @@
 import { AxiosResponse } from 'axios';
 import {
+	DomainEpisodesResponse,
 	DomainPodcastSnapshot,
+	PodcastDetailsResponse,
 	PodcastsResponse,
+	RawPodcastsDetailsResponse,
 	RawPodcastsResponse,
 } from '../types';
+import { convertMsToMinutesSeconds } from '../utils';
 
 const getParsedPodcastId = (podcastId: string) =>
 	podcastId.substring(
@@ -27,4 +31,27 @@ export const rawPodcastsToDomain = (
 
 		return domain;
 	});
+};
+
+export const rawPodcastEpisodesToDomain = (
+	rawPodcastDetails: AxiosResponse<RawPodcastsDetailsResponse, any>
+): DomainEpisodesResponse => {
+	const parsed: PodcastDetailsResponse = JSON.parse(
+		rawPodcastDetails?.data.contents ?? ''
+	);
+
+	return {
+		episodes: parsed.results.map((episode) => ({
+			id: episode.trackId,
+			date: new Date(episode.releaseDate).toLocaleDateString(),
+			title: episode.trackName,
+			duration:
+				episode.trackTimeMillis > 0
+					? convertMsToMinutesSeconds(episode.trackTimeMillis)
+					: '0',
+			description: episode.description ?? '',
+			src: episode.episodeUrl ?? '',
+		})),
+		resultCount: parsed.resultCount,
+	};
 };

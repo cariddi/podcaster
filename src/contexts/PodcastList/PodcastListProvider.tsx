@@ -21,6 +21,10 @@ export function PodcastListProvider({
 		DomainPodcastSnapshot[] | undefined
 	>();
 
+	const [currentPodcast, setCurrentPodcast] = useState<
+		DomainPodcastSnapshot | undefined
+	>();
+
 	const [filteredPodcasts, setFilteredPodcasts] = useState<
 		DomainPodcastSnapshot[] | undefined
 	>();
@@ -71,6 +75,8 @@ export function PodcastListProvider({
 				filteredPodcasts: filteredPodcasts ?? [],
 				updateFilteredPodcasts,
 				loading: podcastsLoading,
+				currentPodcast,
+				setCurrentPodcast,
 			}}
 		>
 			{children}

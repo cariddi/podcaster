@@ -1,12 +1,21 @@
 import { Badge, HStack, Spinner, VStack } from '@chakra-ui/react';
-import { EmptyState } from '../components/EmptyState';
-import { SearchBar } from '../components/SearchBar';
+import { useNavigate } from 'react-router-dom';
+import { EmptyState, SearchBar } from '../components';
 import { useCurrentPodcastList } from '../contexts/PodcastList/PodcastListContext';
-import PodcastCard from './components/PodcastCard';
+import { PodcastCard } from './components';
 
 const PodcastList = () => {
 	const context = useCurrentPodcastList();
-	const { loading, filteredPodcasts, updateFilteredPodcasts } = context;
+	const {
+		loading,
+		filteredPodcasts,
+		updateFilteredPodcasts,
+		setCurrentPodcast,
+	} = context;
+
+	const navigate = useNavigate();
+	const onClickCard = (podcastId: string): void =>
+		navigate(`/podcast/${podcastId}`);
 
 	if (loading) return <Spinner size="xl" mt={16} />;
 
@@ -35,6 +44,10 @@ const PodcastList = () => {
 							name={podcast.name}
 							author={podcast.author}
 							key={podcast.name}
+							onClickCard={() => {
+								setCurrentPodcast(podcast);
+								onClickCard(podcast.id);
+							}}
 						/>
 					))
 				) : (
