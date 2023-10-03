@@ -1,10 +1,12 @@
+import { lazy } from 'react';
 import { createRoutesFromElements, Route } from 'react-router-dom';
 import { App } from './App';
 import { Paths } from './paths';
-import EpisodeDetails from './routes/EpisodeDetails';
 import { ErrorPage } from './routes/Error';
-import PodcastDetails from './routes/PodcastDetails';
-import PodcastList from './routes/PodcastList';
+
+const EpisodeDetails = lazy(() => import('./routes/EpisodeDetails'));
+const PodcastDetails = lazy(() => import('./routes/PodcastDetails'));
+const PodcastList = lazy(() => import('./routes/PodcastList'));
 
 const base = Paths.HOME;
 export const routes = createRoutesFromElements(

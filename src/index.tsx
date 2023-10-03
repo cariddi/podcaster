@@ -1,5 +1,5 @@
-import { ColorModeScript } from '@chakra-ui/react';
-import { StrictMode } from 'react';
+import { ColorModeScript, Heading } from '@chakra-ui/react';
+import { StrictMode, Suspense } from 'react';
 import * as ReactDOM from 'react-dom/client';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { routes } from './routes';
@@ -12,6 +12,8 @@ const root = ReactDOM.createRoot(container);
 root.render(
 	<StrictMode>
 		<ColorModeScript initialColorMode={theme.config.initialColorMode} />
-		<RouterProvider router={createBrowserRouter(routes)} />
+		<Suspense fallback={<Heading>Loading...</Heading>}>
+			<RouterProvider router={createBrowserRouter(routes)} />
+		</Suspense>
 	</StrictMode>
 );

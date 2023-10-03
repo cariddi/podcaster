@@ -15,7 +15,6 @@ const EpisodesBanner = () => {
 			<SkeletonText isLoaded={!loading} fontWeight={800} w="50vh">
 				Episodes: {episodesList?.resultCount}
 			</SkeletonText>
-			;
 		</HStack>
 	);
 };
