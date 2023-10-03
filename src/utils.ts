@@ -3,9 +3,6 @@ export const getParsedText = (text: string) =>
 		? text.toUpperCase()
 		: text.substring(0, 30).toUpperCase() + '...';
 
-export const isExpiredDate = (date: Date): boolean =>
-	(new Date().getTime() - date.getTime()) / (1000 * 3600 * 24) > 1;
-
 export const isIncluded = (str: string, term: string): boolean =>
 	str.toLowerCase().includes(term.toLowerCase());
 
@@ -20,4 +17,11 @@ export const convertMsToMinutesSeconds = (milliseconds: number) => {
 	return seconds === 60
 		? `${minutes + 1}:00`
 		: `${minutes}:${padTo2Digits(seconds)}`;
+};
+
+export const getExpiresIn = (): Date => {
+	const tomorrow = new Date();
+	tomorrow.setDate(new Date().getDate() + 1);
+
+	return tomorrow;
 };

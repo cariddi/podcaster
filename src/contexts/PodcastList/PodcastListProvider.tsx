@@ -1,8 +1,9 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { CookiesProvider, useCookies } from 'react-cookie';
 import { getTopPodcastsFullUrl } from '../../paths';
 import { DomainPodcastSnapshot, RawPodcastsResponse } from '../../types';
-import { isExpiredDate, isIncluded } from '../../utils';
+import { getExpiresIn, isIncluded } from '../../utils';
 import { rawPodcastsToDomain } from '../PodcastMapping';
 import { PodcastListContext } from './PodcastListContext';
 
@@ -13,9 +14,7 @@ interface PodcastListProviderProps {
 export function PodcastListProvider({
 	children,
 }: PodcastListProviderProps): JSX.Element {
-	const [lastRequestedDate, setLastRequestedDate] = useState<
-		Date | undefined
-	>();
+	const [cookies, setCookie] = useCookies(['podcastsReqDate']);
 
 	const [podcasts, setPodcasts] = useState<
 		DomainPodcastSnapshot[] | undefined
@@ -35,7 +34,7 @@ export function PodcastListProvider({
 	useEffect(() => {
 		if (
 			(!podcasts && podcastsValid) ||
-			(lastRequestedDate && isExpiredDate(lastRequestedDate))
+			cookies['podcastsReqDate'] === undefined // expires after 1 day
 		) {
 			fetchPodcasts();
 		}
@@ -44,6 +43,8 @@ export function PodcastListProvider({
 	const fetchPodcasts = async () => {
 		setPodcastsLoading(true);
 		try {
+			console.log({ today: new Date(), expiresIn: getExpiresIn() });
+
 			const rawPodcasts = await axios.get<RawPodcastsResponse>(
 				getTopPodcastsFullUrl()
 			);
@@ -52,7 +53,9 @@ export function PodcastListProvider({
 			setFilteredPodcasts(rawPodcastsToDomain(rawPodcasts));
 			setPodcastsValid(true);
 
-			setLastRequestedDate(new Date());
+			setCookie('podcastsReqDate', new Date(), {
+				expires: getExpiresIn(),
+			});
 		} catch {
 			setPodcastsValid(false);
 		}
@@ -69,17 +72,19 @@ export function PodcastListProvider({
 	};
 
 	return (
-		<PodcastListContext.Provider
-			value={{
-				podcasts: podcasts ?? [],
-				filteredPodcasts: filteredPodcasts ?? [],
-				updateFilteredPodcasts,
-				loading: podcastsLoading,
-				currentPodcast,
-				setCurrentPodcast,
-			}}
-		>
-			{children}
-		</PodcastListContext.Provider>
+		<CookiesProvider>
+			<PodcastListContext.Provider
+				value={{
+					podcasts: podcasts ?? [],
+					filteredPodcasts: filteredPodcasts ?? [],
+					updateFilteredPodcasts,
+					loading: podcastsLoading,
+					currentPodcast,
+					setCurrentPodcast,
+				}}
+			>
+				{children}
+			</PodcastListContext.Provider>
+		</CookiesProvider>
 	);
 }
