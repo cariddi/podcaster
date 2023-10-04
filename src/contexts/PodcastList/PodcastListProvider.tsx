@@ -43,8 +43,6 @@ export function PodcastListProvider({
 	const fetchPodcasts = async () => {
 		setPodcastsLoading(true);
 		try {
-			console.log({ today: new Date(), expiresIn: getExpiresIn() });
-
 			const rawPodcasts = await axios.get<RawPodcastsResponse>(
 				getTopPodcastsFullUrl()
 			);
